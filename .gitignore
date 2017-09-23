@@ -25,7 +25,11 @@ target
 **/project/target
 **/project/project/target
 
-# WorkSheet files
+# WorkSheet files362
+
+3
+.
++
 #*.sc
 
 # test logs
