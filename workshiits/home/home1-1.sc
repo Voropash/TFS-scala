@@ -1,15 +1,11 @@
-def fixByVal(step: ((BigInt, Long) => Long) => ((BigInt, Long) => Long)): (BigInt, Long) => Long =
-  step(fixByVal(step))
+object FixCompile extends App {
 
-def fixByName(step: (=> (BigInt, Long) => Long) => ((BigInt, Long) => Long)): (BigInt, Long) => Long =
-  step(fixByName(step))
+  val mapper: Int => Int = (i: Int) => if (i % 2 != 0) i * 2 else 0
 
 
+  val result = List(1, 2, 3, 4, 5, 6, 7, 8, 9).map {
+    mapper
+  }.foldLeft(0) ( (acc: Int, v: Int) => acc + v )
 
-fixByName(recur => (x, steps) =>
-  if (x == 1) steps
-  else recur(if (x % 2 == 0) x / 2 else 3 * x + 1, steps + 1))(27, 0)
-
-//fixByVal(recur => (x, steps) =>
-//  if (x == 1) steps
-//  else recur(if (x % 2 == 0) x / 2 else 3 * x + 1, steps + 1))(27, 0)
+  print(result)
+}
