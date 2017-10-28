@@ -30,10 +30,10 @@ sealed trait CherryTree[+T] extends LinearSeq[T]
 
   def append[S >: T](x: S): CherryTree[S]
 
-//  override def apply(n: Int): T = {
-//    var this_copy = this
-//    (0 until n).foreach(_ => this_copy = this_copy.tail)
-//    this_copy.last
+//  override def apply(n: Int): T = this match {
+//    case p: CherrySingle[T] => if (n == 0) p.x else throw new NoSuchElementException()
+//    case p: CherryBranch[T] => p.applyCase(n)
+//    case _ => throw new NoSuchElementException()
 //  }
 
   def prepend[S >: T](x: S): CherryTree[S]
@@ -153,16 +153,15 @@ final case class CherryBranch[+T](left: Node[T], inner: CherryTree[Node2[T]], ri
     case n: Node2[S] => CherryBranch(Node1(x), inner.append(n), right)
   }
 
-  def applyCase[S >: T](n:Int) = {
-    if (n < left.size) {
-//      left(n)
-    } else     if (n - left.size < 2 * inner.size) {
-      inner(n - left.size)
-    } else {
-//      right(n - left.size - 2 * inner.size)
-    }
-    left.size + inner.size * 2 + right.size
-  }
+//  def applyCase[S >: T](n: Int): T = {
+//    if (n < left.size) {
+//            left.applyCase(n)
+//    } else if (n - left.size < 2 * inner.size) {
+//      inner.apply(n - left.size)
+//    } else {
+//      right.applyCase(n - left.size - 2 * inner.size)
+//    }
+//  }
 
   override def size = left.size + inner.size * 2 + right.size
 
@@ -203,12 +202,18 @@ object CherryTree extends SeqFactory[CherryTree] {
     def foreach[U](f: T => U): Unit
 
     def size: Int
+
+    def applyCase(n: Int): T
   }
 
   final case class Node1[+T](x: T) extends Node[T] {
     override def foreach[U](f: (T) => U): Unit = f(x)
 
     def size = 1
+
+    def applyCase(n: Int): T = {
+      if (n == 1) x else throw new NoSuchElementException
+    }
   }
 
   final case class Node2[+T](x: T, y: T) extends Node[T] {
@@ -218,6 +223,10 @@ object CherryTree extends SeqFactory[CherryTree] {
     }
 
     def size = 2
+
+    def applyCase(n: Int): T = {
+      if (n == 1) x else if (n == 1) y else throw new NoSuchElementException
+    }
   }
 
 }
