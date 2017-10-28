@@ -35,7 +35,7 @@ class CherryTreeSuite extends FlatSpec with PropertyChecks with Matchers {
   it should "get last" in forAll { xs: Vector[Int] =>
     val tree = CherryTree(xs: _*)
     if (xs.isEmpty) an[NoSuchElementException] should be thrownBy tree.last
-    else xs.head shouldBe xs.head
+    else xs.last shouldBe xs.last
   }
 
   it should "get element by index" in forAll { (xs: Vector[Int], i: Int) =>
